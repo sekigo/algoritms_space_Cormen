@@ -1,0 +1,17 @@
+#include <iostream>
+
+int main() {
+  int a[] = {5,2,4,6,6,1,3};
+  for (int j = 1; j < std::size(a); ++j) {
+    int key = a[j]; 
+    int i = j - 1;
+    while (i >= 0 && a[i] < key) {
+      std::swap(a[i + 1], a[i]);
+      --i;
+    }
+  }
+
+  for (int i = 0; i < std::size(a);++i) {
+    std::cout << a[i] << std::endl;
+  }
+}
