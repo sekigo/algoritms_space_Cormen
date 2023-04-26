@@ -1,0 +1,42 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+void dfs(const vector<vector<int>> &g, vector<int> &used, vector<int>& color, int v, int count) {
+  used[v] = true;
+  color[v] = count;
+  for (auto to : g[v]) {
+    if (!used[to]) {
+      dfs(g, used,color, to, count);
+    }
+  }
+}
+
+int main() {
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> gr(n + 1);
+  for (int i = 0; i < m; ++i) {
+    int f, t;
+    cin >> f >> t;
+    gr[f].push_back(t);
+    gr[t].push_back(f);
+  }
+  vector<int> used(n, 0);
+  vector<int> color(n, -1);
+
+
+  int count = 0;
+
+  for (int i = 0; i < n; ++i) {
+    if (!used[i]) {
+      dfs(gr, used,color, i,count);
+      count++;
+    }
+  }
+  cout << "Count: " << count << endl;
+  for (auto i: color){
+    cout << i << ' ';
+  }
+}
