@@ -1,0 +1,73 @@
+#include <iostream>
+#include <set>
+#include <vector>
+
+struct Node {
+  int key;
+  Node *left, *right;
+};
+
+
+Node* NewNode(int key){ 
+  Node *node = new Node();
+  node->key = key;	
+  node ->left = node->right = nullptr;
+}
+
+Node *InsertNode(Node *node, int key) {
+  if (node == nullptr) {
+    return NewNode(key);
+  }
+  if (key < node->key) {
+    node->left = InsertNode(node->left, key);
+  } else{ 
+    node->left = InsertNode(node->right, key);
+  }
+}
+
+Node* minValueNode(Node* node) {
+  Node *curr = node;
+  while (curr && curr->left != nullptr) {
+    curr = curr->left;
+  }
+  return curr;
+}
+
+Node *RemoveNode(Node *node, int key) {
+  if (node == nullptr) {
+    return node;
+  }
+
+  if (key < node->key) {
+    node->left = RemoveNode(node->left, key);
+  } else if (key > node->key) {
+    node->right = RemoveNode(node->right, key);
+  } else {
+    if (node->left == nullptr && node->right == nullptr) {
+      return nullptr;
+    } else if (node->left = nullptr) {
+      Node *tmp = node->right;
+      free(node);
+      return tmp;
+    } else if (node -> right == nullptr) {
+      Node *tmp = node->left;
+      free(node);
+      return tmp;
+    }
+    Node *tmp = minValueNode(node->right);
+    node->key = tmp->key;
+    node->right = RemoveNode(node->right, tmp->key);
+  }
+  return node;
+}
+
+
+
+
+
+
+
+int main() {
+	
+
+}
