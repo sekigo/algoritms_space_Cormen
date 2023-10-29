@@ -1,0 +1,57 @@
+use std::path::Path;
+mod search_by_pattern;
+mod build_target_path;
+
+
+pub fn mass_moving(star_path:String, marker_path: String){
+    let input1 = Path::new(&star_path); // source patter 
+    let file = input1.file_name().unwrap().to_str().unwrap().to_string();
+    // file name(with starts)
+    
+    
+    
+    let markers = Path::new(&marker_path); // target pattern
+    let markers_file = markers.file_name().unwrap().to_str().unwrap().to_string();
+    // file name
+    
+    
+    
+    let par = markers.parent().unwrap().to_str().unwrap().to_string();
+    //path to target pattern
+    let folder_path = input1.parent().unwrap().to_str().unwrap();
+    //path to source pattern
+    
+    
+    
+    let list = search_by_pattern::search_by_pattern_func(input1.to_str().unwrap(),folder_path);
+    // list of paths to valid files
+    // println!("{:?}", list);
+    let mut vec:Vec<String> = Vec::new(); // initializing vec with new_names
+
+
+
+    
+    for i in list.iter(){  //itatarion in all found files
+        let tmp = Path::new(i).file_name().unwrap().to_str().unwrap().to_string();
+        // name of valid file
+
+
+        let mut tmp3 = String::new(); 
+        tmp3.push_str(&par);
+        tmp3.push('/'); // additing path
+
+
+        vec.push(build_target_path::build_target_path_func(
+            build_target_path::extract_generic_parts_func(tmp.to_string(),file.to_string())
+            ,markers_file.to_string())); // main func
+        tmp3.push_str(&vec[vec.len()-1]);
+        // println!("{}",tmp3);
+        
+        
+        // moving
+        build_target_path::moving(&Path::new(&list[vec.len()-1]), &Path::new(&tmp3)); 
+        // moving
+        println!("{} -> {}",list[vec.len()-1], tmp3);
+
+    }
+}
