@@ -1,0 +1,37 @@
+
+use std::path::Path;
+use regex::Regex;
+use std::fs;
+
+pub fn search_by_pattern_func(pattern: &str, folder_path: &str) -> Vec<String> {
+    
+    let tmp = Path::new(pattern); // path to ower pattern
+    let mut patt = String::new(); // inisializing pattern
+    
+    // making patter
+    patt.push('^');
+    patt.push_str(&tmp.file_name().unwrap().to_str().unwrap().to_string());
+    patt.push('?'); 
+    
+    let res = patt.replace("*","(.*+)"); 
+    let re = Regex::new(&res).unwrap(); // creating matching base
+    let mut matching_files = Vec::new();// answer list (empty)
+
+    // list of files in folder
+    let folder_files = fs::read_dir(folder_path).expect("Failed to read folder");
+
+
+    for file in folder_files {
+        if let Ok(file_entry) = file { //checking existence
+            let file_name = file_entry.file_name().into_string().unwrap();
+
+            // matching
+            if re.is_match(&file_name) {
+                let file_path = format!("{}/{}", folder_path, file_name);
+                matching_files.push(file_path);
+            }
+        }
+    }
+
+    matching_files
+}
