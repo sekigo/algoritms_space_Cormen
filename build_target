@@ -1,0 +1,58 @@
+use std::path::Path;
+
+pub fn extract_generic_parts_func<'name>(name:String, points:String)->Vec<String>{
+    let mut arr:Vec<String> = Vec::new(); 
+    // empty string value of searching answer
+    let mut v: Vec<&str> = points.split('*').collect();
+    // spliting vector by stars
+
+
+    if v[0] == "" {v.remove(0);}
+    // checking if the star is first
+    if v[v.len()-1] == ""{v.remove(v.len()-1);}
+    // ... is last
+
+
+    let mut index = 0; 
+    let mut left_board = 0;
+    for i in 0..name.len()-1{
+        if index == v.len(){break;} // if index > v length, 
+        // end iteration
+        
+        if &name[i..i + v[index].len()] == v[index]{ // fulling answer
+            arr.push(name[left_board..i].to_string());
+            left_board = i + v[index].len();
+            index += 1;
+        }
+
+    }
+    arr.push(name[left_board..name.len()].to_string());
+    // pushing last substring
+    if arr[0] == "" {arr.remove(0);} // checking
+    if arr[arr.len()-1] == "" {arr.remove(arr.len()-1);} // checking
+    arr 
+}
+
+
+
+pub fn build_target_path_func(arr: Vec<String>, s: String) -> String{
+    let mut ans = String::new(); // empty str
+    let chars: Vec<char> = s.chars().collect(); 
+    // str from previous function as vector
+    
+    
+    for i in 0..s.len(){
+        if i > 0 {if chars[i-1] == '#' { continue; } } 
+        // checking if we r in number after marker
+
+        if chars[i] == '#'{ans.push_str(&arr[chars[i+1].to_string().parse::<usize>().unwrap()-1]);}
+        // if marker => pushing vector element(stars content)
+        else{ans.push( chars[i]);}
+        // else only letters
+    }
+    ans
+}
+
+pub fn moving(previous: &Path, new_path: &Path) -> (){
+    let _ = std::fs::rename(previous,new_path);
+}
